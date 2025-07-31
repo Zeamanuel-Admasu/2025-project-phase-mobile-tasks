@@ -93,12 +93,13 @@ class HomePage extends StatelessWidget {
                     itemCount: products.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 16),
                     itemBuilder: (context, index) {
-                      return ProductCard(product: products[index], onTap: () {  Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ProductDetailsPage(product: products[index]),
-      ),
-    );},);
+                      return ProductCard(product: products[index], onTap: () {
+  Navigator.pushNamed(
+    context,
+    '/details',
+    arguments: products[index],
+  );
+},);
                     },
                   ),
                 ),
@@ -113,11 +114,8 @@ class HomePage extends StatelessWidget {
   backgroundColor: Colors.indigoAccent,
   shape: const CircleBorder(),
   onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const AddProductPage()),
-    );
-  },
+  Navigator.pushNamed(context, '/add');
+},
   child: const Icon(Icons.add),
 ),
     );

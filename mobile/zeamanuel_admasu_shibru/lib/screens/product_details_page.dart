@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../models/product.dart';
 
 class ProductDetailsPage extends StatefulWidget {
+  static const routeName = '/details';
+
   final Product product;
 
   const ProductDetailsPage({super.key, required this.product});
@@ -11,7 +13,7 @@ class ProductDetailsPage extends StatefulWidget {
 }
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
-  int selectedSize = 41; // Default selected size
+  int selectedSize = 41;
 
   final List<int> availableSizes = [39, 40, 41, 42, 43, 44];
 
@@ -23,7 +25,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Product Image with Back Button
+            // Image & Back
             Stack(
               children: [
                 ClipRRect(
@@ -59,14 +61,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category and Rating
+                    // Category + Rating
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Men’s shoe",
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                        const Text("Men’s shoe", style: TextStyle(color: Colors.grey)),
                         Row(
                           children: const [
                             Icon(Icons.star, color: Colors.amber, size: 18),
@@ -78,23 +77,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ),
                     const SizedBox(height: 6),
 
-                    // Product Name and Price
+                    // Name & Price
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          product.name,
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "\$${product.price}",
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
+                        Text(product.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        Text("\$${product.price}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 20),
 
-                    // Size Selector
+                    // Size Picker
                     const Text("Size:", style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     SizedBox(
@@ -145,9 +138,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     // Action Buttons
                     Row(
                       children: [
+                        // DELETE button
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              // Return to HomePage with delete signal
+                              Navigator.pop(context, {'delete': product});
+                            },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.red,
                               side: const BorderSide(color: Colors.red),
@@ -159,9 +156,21 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           ),
                         ),
                         const SizedBox(width: 12),
+
+                        // UPDATE button
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final updatedProduct = await Navigator.pushNamed(
+                                context,
+                                '/add',
+                                arguments: product,
+                              );
+
+                              if (updatedProduct is Product) {
+                                Navigator.pop(context, {'update': updatedProduct});
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.indigo,
                               shape: RoundedRectangleBorder(
